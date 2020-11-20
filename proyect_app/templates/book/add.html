@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<form action="{{ url_for('book.add') }}" method="POST">
+    {% include "book/_form.html" %}
+    <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Guardar</button>
+</form>
+{% endblock %}

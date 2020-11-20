@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% from 'partials/macro/pagination.html' import b_pagination %}
+
+{% block content %}
+
+{% include "book/add_modal.html" %}
+{% include "book/delete_modal.html" %}
+
+<div class="row">
+    {% for b in books.items %}
+    <div class="col-xl-3 col-md-4 col-12 mt-2">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    {{ b.name }}
+
+                    <button data-toggle="modal" data-target="#deleteModal" class="btn-sm btn btn-outline-danger float-right"
+                        data-id="{{b._id}}" data-name="{{b.name}}"> <i class="fa fa-trash"></i> </button>
+                    <button data-toggle="modal" data-target="#saveModal"
+                        class="btn-sm btn btn-outline-primary float-right mr-2" data-id="{{b._id}}" data-name="{{b.name}}">
+                        <i class="fa fa-edit"></i>
+                    </button>
+
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>{{ b.content }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{{ b_pagination(books) }}
+
+{% endblock %}

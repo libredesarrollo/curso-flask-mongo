@@ -1,0 +1,98 @@
+<button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#saveModal"> <i
+        class="fa fa-plus"></i> Crear</button>
+
+<div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="saveForm" action="{{ url_for('book.add') }}" method="POST" add_action="{{ url_for('book.add') }}"
+                update_action="{{ url_for('book.update', id=0 ) }}">
+                <div class="modal-body">
+
+                    {% include "book/_form.html" %}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    
+    window.onload = function(){
+        saveBook()
+    }
+
+    function saveBook() {
+        var saveModal = document.getElementById('saveModal')
+
+        if (document.querySelectorAll("#saveModal .text-danger").length > 0) {
+            var saveModalController = new bootstrap.Modal(saveModal)
+            saveModalController.show()
+        }
+
+        var saveForm = document.getElementById('saveForm')
+
+        saveModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-* attributes
+            var id = button.getAttribute('data-id')
+            var name = button.getAttribute('data-name')
+
+            if (id == null) {
+                // add
+                saveForm.setAttribute('action', saveForm.getAttribute('add_action'))
+                document.querySelector('#saveModal .modal-title').textContent = "Crear libro"
+            } else {
+                // actualizacion
+                saveForm.setAttribute('action', saveForm.getAttribute('update_action').slice(0, -1) + id)
+                document.querySelector('#saveModal .modal-title').textContent = "Actualizar libro: " + name
+                getInfoBook(id)
+            }
+
+        })
+    }
+
+    function getInfoBook(bookId) {
+
+        fetch('http://127.0.0.1:5000/book/get_detail_by_id/' + bookId)
+            .then(res => res.json())
+            .then(res => {
+                if (res == name)
+                    return
+
+                var name = document.querySelector('#saveForm [name=name]')
+                name.value = res.name
+                var content = document.querySelector('#saveForm [name=content]')
+                content.value = res.content
+
+                var dimentionx = document.querySelector('#saveForm [name=dimention-x]')
+                dimentionx.value = res.dimention.x
+                var dimentiony = document.querySelector('#saveForm [name=dimention-y]')
+                dimentiony.value = res.dimention.y
+                var dimentionz = document.querySelector('#saveForm [name=dimention-z]')
+                dimentionz.value = res.dimention.z
+
+                document.querySelector('#saveForm [name=category] option[value="'+res.category.$oid+'"]').selected="selected"
+                console.log(res.tags[0])
+
+                res.tags.forEach(t => {
+                    document.querySelector('#saveForm [name=tags] option[value="'+t.$oid+'"]').selected="selected"
+                })
+
+                
+
+            })
+    }
+</script>

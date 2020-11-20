@@ -1,0 +1,9 @@
+{% macro error_field(form, field) %}
+
+{% if form.errors[field] %}
+    <p class="text-danger">
+        {{ form.errors[field][0]}}
+    </p>
+{% endif %}
+
+{%- endmacro %}

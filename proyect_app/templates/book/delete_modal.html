@@ -1,0 +1,44 @@
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="deleteForm" action="{{ url_for('book.delete', id=0) }}" method="POST" delete_action="{{ url_for('book.delete', id=0) }}">
+                <div class="modal-body">
+                    ¿Seguro que deseas borrar el documento seleccionado?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    deleteBook()
+
+    function deleteBook() {
+        var deleteModal = document.getElementById('deleteModal')
+        var deleteForm = document.getElementById('deleteForm')
+
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-* attributes
+            var id = button.getAttribute('data-id')
+            var name = button.getAttribute('data-name')
+
+            deleteForm.setAttribute('action', deleteForm.getAttribute('delete_action').slice(0, -1) + id)
+            document.querySelector('#deleteForm .modal-title').textContent = "Eliminar libro: " + name
+
+        })
+    }
+
+
+</script>
