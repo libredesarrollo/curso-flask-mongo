@@ -1,19 +1,26 @@
 from flask import Blueprint, render_template, request, redirect, flash, url_for, jsonify
+from flask_user import login_required
 
 from proyect_app import app
-
 from .models import Book, BookForm, Category, Dimention, Address, AddressForm, Tag
 
 bookBp = Blueprint('book',__name__, url_prefix='/book')
 
+@bookBp.before_request
+@login_required
+def constructor():
+   pass
+
 @bookBp.route('/')
 @bookBp.route('/<int:page>')
+
 def index(page=1):
     #save_category()
     #save_tag()
     return get_list_paginate(page,BookForm(),AddressForm())
 
 @bookBp.route('/add', methods=('GET', 'POST'))
+@login_required
 def add():
 
     print(request.method)
@@ -43,6 +50,7 @@ def add():
     return get_list_paginate(1,form,addressForm)
     #return render_template('book/add.html', form=BookForm())
 
+@login_required
 @bookBp.route('/update/<string:id>', methods=('POST',))
 def update(id):
     book = Book.objects.get_or_404(_id=id)
@@ -73,6 +81,7 @@ def update(id):
         return redirect(url_for('book.index'))
     return get_list_paginate(1,form,addressForm)
 
+@login_required
 @bookBp.route('/delete/<string:id>', methods=('POST',))
 def delete(id):
     Book.objects(_id=id).delete()
@@ -84,6 +93,7 @@ def get_list_paginate(page, form, formAddress):
 
 #------------Json
 
+@login_required
 @bookBp.route('/get_detail_by_id/<string:id>')
 def getDetailById(id):
     return jsonify(Book.objects.get(_id=id))

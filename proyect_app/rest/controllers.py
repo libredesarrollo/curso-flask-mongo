@@ -44,8 +44,11 @@ pipes = [
     #{'$unwind': "$tags"},
 ]
 
-class BookApi(Resource):
+from flask_jwt import jwt_required
 
+class BookApi(Resource):
+    decorators = [jwt_required()]
+    
     @marshal_with(resource_fields, envelope="books")
     def get(self):
         #books = Book.objects.to_json()
